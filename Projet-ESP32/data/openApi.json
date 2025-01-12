@@ -1,0 +1,413 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "ESP32 Sensor API",
+    "version": "1.0.0",
+    "description": "API RESTful pour gérer les capteurs et fonctionnalités de l'ESP32 TTGO T-Display."
+  },
+  "servers": [
+    {
+      "url": "http://192.168.1.26/",
+      "description": "ESP32 Server"
+    }
+  ],
+  "paths": {
+    "/led/red": {
+      "get": {
+        "summary": "Contrôler la LED rouge",
+        "operationId": "controlRedLED",
+        "parameters": [
+          {
+            "name": "state",
+            "in": "query",
+            "required": true,
+            "description": "État de la LED rouge (true = allumer, false = éteindre)",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "true",
+                "false"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Succès de l'opération",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Erreur de requête",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/led/green": {
+      "get": {
+        "summary": "Contrôler la LED verte",
+        "operationId": "controlGreenLED",
+        "parameters": [
+          {
+            "name": "state",
+            "in": "query",
+            "required": true,
+            "description": "État de la LED verte (true = allumer, false = éteindre)",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "true",
+                "false"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Succès de l'opération",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Erreur de requête",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/get/light": {
+      "get": {
+        "summary": "Obtenir la valeur du capteur de lumière",
+        "operationId": "getLight",
+        "responses": {
+          "200": {
+            "description": "Valeur de la lumière en volts",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "light": {
+                      "type": "number",
+                      "description": "Valeur du capteur de lumière en volts",
+                      "example": 2.54
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/get/temperature": {
+      "get": {
+        "summary": "Obtenir la température du capteur",
+        "operationId": "getTemperature",
+        "responses": {
+          "200": {
+            "description": "Valeur de la température en degrés Celsius",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "temperature": {
+                      "type": "number",
+                      "description": "Température en degrés Celsius",
+                      "example": 22.5
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/control/thermometerMode": {
+      "post": {
+        "summary": "Activer/désactiver le mode thermomètre",
+        "description": "Active ou désactive le mode thermomètre en fonction du paramètre `state`. Un seuil de température peut être spécifié via le paramètre `seuil`. Si aucun seuil n'est précisé, la valeur par défaut est utilisée.",
+        "parameters": [
+          {
+            "name": "state",
+            "in": "query",
+            "required": true,
+            "description": "État du mode thermomètre, 'true' pour activer, 'false' pour désactiver.",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "true",
+                "false"
+              ]
+            }
+          },
+          {
+            "name": "seuil",
+            "in": "query",
+            "required": false,
+            "description": "Seuil de température, utilisé pour activer/désactiver la LED rouge.",
+            "schema": {
+              "type": "number",
+              "example": 20.0
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Mode thermomètre activé ou désactivé avec succès",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "success",
+                  "message": "Thermometer mode enabled with threshold 20.0"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Erreur liée aux paramètres",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "error",
+                  "message": "Invalid 'threshold' value"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/control/nightMode": {
+      "post": {
+        "summary": "Activer/désactiver le mode nuit",
+        "description": "Active ou désactive le mode nuit en fonction du paramètre `state`. Un seuil de luminosité peut être spécifié via le paramètre `seuil`. Si aucun seuil n'est précisé, la valeur par défaut est utilisée.",
+        "parameters": [
+          {
+            "name": "state",
+            "in": "query",
+            "required": true,
+            "description": "État du mode nuit, 'true' pour activer, 'false' pour désactiver.",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "true",
+                "false"
+              ]
+            }
+          },
+          {
+            "name": "seuil",
+            "in": "query",
+            "required": false,
+            "description": "Seuil de luminosité, utilisé pour activer/désactiver la LED verte.",
+            "schema": {
+              "type": "number",
+              "example": 1.0
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Mode nuit activé ou désactivé avec succès",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "success",
+                  "message": "Night mode enabled with threshold 1.0"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Erreur liée aux paramètres",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "error",
+                  "message": "Invalid 'threshold' value"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/play": {
+      "get": {
+        "summary": "Jouer une mélodie",
+        "operationId": "handlePlayMelody",
+        "responses": {
+          "200": {
+            "description": "Mélodie jouée avec succès",
+            "parameters": [
+          {
+            "name": "melody",
+            "in": "query",
+            "required": true,
+            "description": "Numéro de la melodie à jouer. La valeur va de 1 à 5.",
+            "schema": {
+              "type": "int",
+              "example": 1
+            }
+          }
+        ],
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Erreur lors de la lecture de la mélodie",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/setAlarm": {
+      "post": {
+        "summary": "Mettre une alarme et choisir la musique",
+        "description": "Cette route permet de définir l'heure de l'alarme et la mélodie à jouer.",
+        "operationId": "setAlarm",
+        "parameters": [
+          {
+            "name": "hour",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "example": 7
+            },
+            "description": "L'heure à définir pour l'alarme."
+          },
+          {
+            "name": "minute",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "example": 30
+            },
+            "description": "Les minutes à définir pour l'alarme."
+          },
+          {
+            "name": "melody",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "example": 1
+            },
+            "description": "La mélodie à jouer lorsque l'alarme se déclenche. Les valeurs vont de 1 à 5."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "L'alarme a été définie avec succès",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "success",
+                  "message": "Alarme définie pour 7h30 avec la mélodie 1"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Paramètres manquants ou invalides",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "error",
+                  "message": "Paramètres manquants"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
