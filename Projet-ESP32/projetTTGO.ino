@@ -14,8 +14,8 @@
 
 // ========================= CONFIGURATION =========================
 // Définition des pins
-const int THERMISTOR_PIN = 36; // GPIO36, ADC1
-const int PHOTORESISTOR_PIN = 39; // GPIO39, ADC1
+const int THERMISTOR_PIN = 36; // GPIO36, ADC0
+const int PHOTORESISTOR_PIN = 39; // GPIO39, ADC3
 const int REDLED_PIN = 13; // GPIO13, sortie numérique
 const int GREENLED_PIN = 17; // GPIGPIO27, sortie numérique
 const int BUZZER_PIN = 25; // GPIO25, sortie numérique

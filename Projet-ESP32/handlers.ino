@@ -189,32 +189,45 @@ void handleThermometerMode(AsyncWebServerRequest* request) {
 
 // Gérer la route pour jouer des mélodies ("/play/melody")
 void handlePlayMelody(AsyncWebServerRequest* request) {
-    if (request->hasParam("melody")) { // Vérifier si le paramètre 'melody' est fourni
-        String melodyParam = request->getParam("melody")->value(); // Récupérer la valeur du paramètre 'melody'
-        int melodyNumber = melodyParam.toInt(); // Convertir en entier le numéro de la mélodie
+    // Vérifier si le paramètre 'melody' est présent dans la requête
+    if (request->hasParam("melody")) { 
+        // Récupérer la valeur du paramètre 'melody' sous forme de chaîne
+        String melodyParam = request->getParam("melody")->value(); 
+        // Convertir la chaîne en entier pour obtenir le numéro de la mélodie
+        int melodyNumber = melodyParam.toInt(); 
 
-        // Appeler la fonction factorisée pour jouer la mélodie
+        // Appeler la fonction factorisée pour sélectionner et jouer la mélodie
         selectAndPlayMelody(melodyNumber);
 
-        // Répondre avec un message de succès
-        String melodyName = getMelodyName(melodyNumber); // Appeler la fonction pour obtenir le nom de la mélodie
+        // Obtenir le nom de la mélodie correspondante pour la réponse
+        String melodyName = getMelodyName(melodyNumber); 
 
+        // Créer un document JSON pour la réponse
         DynamicJsonDocument jsonDoc(1024);
-        jsonDoc["status"] = "success";
-        jsonDoc["message"] = "Playing melody: " + String(melodyName);
+        jsonDoc["status"] = "success"; // Indiquer que l'opération a réussi
+        jsonDoc["message"] = "Playing melody: " + String(melodyName); // Inclure le nom de la mélodie jouée
+        
+        // Sérialiser l'objet JSON en une chaîne pour l'envoyer en réponse
         String jsonResponse;
         serializeJson(jsonDoc, jsonResponse);
+
+        // Envoyer une réponse HTTP 200 (succès) avec le JSON généré
         request->send(200, "application/json", jsonResponse);
     } else {
-        // Si le paramètre 'melody' est manquant
+        // Si le paramètre 'melody' est manquant, préparer une réponse d'erreur
         DynamicJsonDocument jsonDoc(1024);
-        jsonDoc["status"] = "error";
-        jsonDoc["message"] = "Missing 'melody' parameter";
+        jsonDoc["status"] = "error"; // Indiquer une erreur
+        jsonDoc["message"] = "Missing 'melody' parameter"; // Message d'erreur pour le client
+        
+        // Sérialiser l'objet JSON en une chaîne pour l'envoyer en réponse
         String jsonResponse;
         serializeJson(jsonDoc, jsonResponse);
+
+        // Envoyer une réponse HTTP 400 (mauvaise requête) avec le JSON généré
         request->send(400, "application/json", jsonResponse);
     }
 }
+
 
 // Gérer la route pour mettre en place une alarme ("/setAlarm")
 void handleSetAlarm(AsyncWebServerRequest* request) {

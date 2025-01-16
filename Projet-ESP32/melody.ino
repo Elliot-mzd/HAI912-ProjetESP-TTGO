@@ -92,8 +92,8 @@ int durations_nokia[] = {
 // Fonction pour jouer une mélodie spécifique
 void playMelodyTask(void* parameter) {
     for (int i = 0; i < melodyLength; i++) {
-        int note = melodyToPlay[i];
-        int duration = durationsToPlay[i];
+        int note = melodyToPlay[i]; // Recupere la note
+        int duration = durationsToPlay[i]; // Recupere la durée
 
         if (note > 0) {
             tone(BUZZER_PIN, note, duration); // Joue la note
