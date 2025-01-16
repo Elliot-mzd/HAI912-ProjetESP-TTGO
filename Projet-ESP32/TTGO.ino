@@ -123,6 +123,12 @@ void handlePlayMelody(AsyncWebServerRequest* request);
 // Déclaration de la fonction pour configurer une alarme
 void handleSetAlarm(AsyncWebServerRequest* request);
 
+// Déclaration de la fonction pour connaitre l'état de la LED rouge
+void handleRedLEDStatus(AsyncWebServerRequest* request);
+
+// Déclaration de la fonction pour connaitre l'état de la LED verte
+void handleGreenLEDStatus(AsyncWebServerRequest* request);
+
 // Déclaration de la fonction pour gérer les erreurs 404 (page non trouvée)
 void handleNotFound(AsyncWebServerRequest* request);
 
@@ -135,6 +141,12 @@ void setupServerRoutes() {
     
     // Route pour récupérer la température
     server.on("/get/temperature", HTTP_GET, handleGetTemperature);
+
+    // Route pour connaitre l'état de la LED rouge
+    server.on("/led/red/status", HTTP_GET, handleRedLEDStatus);
+
+    // Route pour connaitre l'état de la LED vert
+    server.on("/led/green/status", HTTP_GET, handleGreenLEDStatus);
     
     // Route pour contrôler la LED rouge
     server.on("/led/red", HTTP_GET, handleRedLED);
@@ -181,7 +193,7 @@ void setup() {
     setupWiFi();  // Initialise la connexion Wi-Fi
     setupServerRoutes();  // Configure les routes du serveur pour l'API
     setupOTA();// Initialisation d'OTA
-    setupRedoc(); // Initialisation du swagger 
+    setupSwagger(); // Initialisation du swagger 
     setupLittleFS(); // Initialisation de système de fichier
     setupNTP(); // Initialisation de l'horloge
 }

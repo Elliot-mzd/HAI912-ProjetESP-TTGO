@@ -408,6 +408,64 @@
           }
         }
       }
+    },
+    "/led/red/status": {
+        "get": {
+            "summary": "Récupérer l'état de la LED rouge",
+            "operationId": "getRedLEDStatus",
+            "responses": {
+                "200": {
+                    "description": "État de la LED rouge récupéré avec succès",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "status": {
+                                        "type": "string",
+                                        "example": "success"
+                                    },
+                                    "redLED": {
+                                        "type": "string",
+                                        "enum": ["on", "off"],
+                                        "example": "on"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "/led/green/status": {
+        "get": {
+            "summary": "Récupérer l'état de la LED verte",
+            "operationId": "getGreenLEDStatus",
+            "responses": {
+                "200": {
+                    "description": "État de la LED verte récupéré avec succès",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "status": {
+                                        "type": "string",
+                                        "example": "success"
+                                    },
+                                    "greenLED": {
+                                        "type": "string",
+                                        "enum": ["on", "off"],
+                                        "example": "off"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
   }
 }

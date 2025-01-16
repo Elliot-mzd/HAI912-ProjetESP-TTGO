@@ -259,6 +259,46 @@ void handleSetAlarm(AsyncWebServerRequest* request) {
     }
 }
 
+// Gérer la route pour récupérer l'état de la LED rouge ("/led/red/status")
+void handleRedLEDStatus(AsyncWebServerRequest* request) {
+    // Création d'un objet JSON pour la réponse
+    DynamicJsonDocument jsonDoc(1024);
+
+    // Lire l'état actuel de la LED rouge
+    bool isOn = digitalRead(REDLED_PIN) == HIGH;
+
+    // Remplir le JSON avec l'état de la LED
+    jsonDoc["status"] = "success";
+    jsonDoc["redLED"] = isOn ? "on" : "off"; // Indiquer si la LED est allumée ou éteinte
+
+    // Sérialiser le JSON en chaîne de caractères
+    String jsonResponse;
+    serializeJson(jsonDoc, jsonResponse);
+
+    // Envoyer la réponse JSON
+    request->send(200, "application/json", jsonResponse);
+}
+
+// Gérer la route pour récupérer l'état de la LED verte ("/led/green/status")
+void handleGreenLEDStatus(AsyncWebServerRequest* request) {
+    // Création d'un objet JSON pour la réponse
+    DynamicJsonDocument jsonDoc(1024);
+
+    // Lire l'état actuel de la LED verte
+    bool isOn = digitalRead(GREENLED_PIN) == HIGH;
+
+    // Remplir le JSON avec l'état de la LED
+    jsonDoc["status"] = "success";
+    jsonDoc["greenLED"] = isOn ? "on" : "off"; // Indiquer si la LED est allumée ou éteinte
+
+    // Sérialiser le JSON en chaîne de caractères
+    String jsonResponse;
+    serializeJson(jsonDoc, jsonResponse);
+
+    // Envoyer la réponse JSON
+    request->send(200, "application/json", jsonResponse);
+}
+
 // Fonction pour gérer les erreurs 404 (page non trouvée)
 void handleNotFound(AsyncWebServerRequest* request) {
     request->send(404, "text/plain", "Non trouvé");  // Envoie un message d'erreur 404

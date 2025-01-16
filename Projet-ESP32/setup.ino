@@ -41,30 +41,49 @@ void setupScreen() {
     tft.fillScreen(TFT_BLACK); // Effacer l'écran avec la couleur noire
 }
 
-// Fonction de configuration de la mise à jour OTA (Over-The-Air)
+// Fonction de configuration OTA
 void setupOTA() {
-  // Définition du callback à exécuter lors du démarrage de la mise à jour OTA
+  // Callback lors du démarrage de la mise à jour OTA
   ArduinoOTA.onStart([]() {
-    // Définir un mot de passe pour sécuriser les mises à jour OTA
     ArduinoOTA.setPassword("1234");
-    
-    // Déterminer le type de mise à jour (flash ou système de fichiers)
     String type = ArduinoOTA.getCommand() == U_FLASH ? "flash" : "filesystem";
-    
-    // Afficher un message sur la console série indiquant le début de la mise à jour
     Serial.println("Début de la mise à jour OTA: " + type);
   });
-  
-  // Définition du callback à exécuter à la fin de la mise à jour OTA
+
+  // Callback lors de la fin de la mise à jour OTA
   ArduinoOTA.onEnd([]() {
     displayMessage("Mise à jour OTA terminée !");
+    //ESP.restart();  // Redémarre l'ESP32 pour appliquer les changements
+
   });
+
+  // Callback pour afficher la progression de la mise à jour
+  ArduinoOTA.onProgress([](unsigned int progress, unsigned int total) {
+    Serial.printf("Progression: %u%%\r", (progress / (total / 100)));
+  });
+
+  // Callback pour les erreurs OTA
+  ArduinoOTA.onError([](ota_error_t error) {
+    if (error == OTA_AUTH_ERROR) {
+      Serial.println("Erreur d'authentification OTA");
+    } else if (error == OTA_BEGIN_ERROR) {
+      Serial.println("Erreur de début OTA");
+    } else if (error == OTA_CONNECT_ERROR) {
+      Serial.println("Erreur de connexion OTA");
+    } else if (error == OTA_RECEIVE_ERROR) {
+      Serial.println("Erreur de réception OTA");
+    } else if (error == OTA_END_ERROR) {
+      Serial.println("Erreur de fin OTA");
+    }
+  });
+
+  // Démarrage de l'OTA
+  ArduinoOTA.begin();
 }
 
-
 // Sert le fichier "index.html" sur la route par default "/"
-void setupRedoc(){
-   // Servir Redoc(HTML)
+void setupSwagger(){
+   // Servir Swagger UI (HTML, CSS, JS)
   server.serveStatic("/", LittleFS, "/").setDefaultFile("index.html");
 }
 
